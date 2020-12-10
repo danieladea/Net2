@@ -16,9 +16,9 @@
 
 #include "simple-router.hpp"
 #include "core/utils.hpp"
-
+#include <iostream>
 #include <fstream>
-
+#include <string>
 namespace simple_router {
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,9 +36,42 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
   }
 
   std::cerr << getRoutingTable() << std::endl;
-
+   
   // FILL THIS IN
+  ethernet_hdr hd; 
+  for (int i=0; i<6;i++)
+  {
+      hd.ether_dhost[i] = packet[i];
+      hd.ether_shost[i] = packet[i+6];
+  }
+  std::cout<<int(packet[12]);
+  std::cout<<int(packet[13]);
+  hd.ether_type = (packet[12] << 8) + packet[13];
+  int broadcastFlag = 0;
+  int MACflag = 0;
+  for (int i = 0; i<6;i++)
+  {
+      if (hd.ether_dhost[i] != 0xFF)
+          broadcastFlag= 1;
+  }
+  for (int i = 0; i<6;i++)
+  {
+      if (hd.ether_dhost[i]!=iface->addr[i])
+          MACflag= 1;
+  }
 
+
+  std::cout << hd.ether_type;
+  if (hd.ether_type != 0x0806 && hd.ether_type != 0x0800)
+      std::cout << "do nothing?\n";
+  else if (broadcastFlag==1 && MACflag ==1 )
+      std::cout << "do nothing \n";
+  else
+  {
+      std::cout << "did something";
+      //const Interface* destIface = findIfaceByMac(hd.ether_dhost);
+      sendPacket(packet, inIface);     
+  }  
 }
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
