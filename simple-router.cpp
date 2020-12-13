@@ -18,7 +18,7 @@
 #include "core/utils.hpp"
 #include <iostream>
 #include <fstream>
-#include <string>
+#include "string.h"
 namespace simple_router {
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,8 +44,8 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
       hd.ether_dhost[i] = packet[i];
       hd.ether_shost[i] = packet[i+6];
   }
-  std::cout<<int(packet[12]);
-  std::cout<<int(packet[13]);
+  //std::cout<<int(packet[12]);
+  //std::cout<<int(packet[13]);
   hd.ether_type = (packet[12] << 8) + packet[13];
   int broadcastFlag = 0;
   int MACflag = 0;
@@ -71,7 +71,94 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
       std::cout << "did something";
       //const Interface* destIface = findIfaceByMac(hd.ether_dhost);
       sendPacket(packet, inIface);     
-  }  
+  
+    if(hd.ether_type == 0x0806)
+    {
+      const uint8_t* buf = packet.data();
+      buf+=sizeof(hd);
+      print_hdr_arp(buf); 
+      arp_hdr* arpHd = (arp_hdr*)buf;
+      fprintf(stdout, "\thardware type: %d\n", ntohs(arpHd->arp_hrd));
+      //check arp-cache
+      if (0x0001 == ntohs(arpHd->arp_op))
+      {
+        //arp request
+        //unsigned char macAddr[6]; 
+        //std::cout << "\n mac addr:";
+        for(int i = 0; i<6; i++)
+        {
+          (arpHd->arp_tha)[i] = (arpHd->arp_sha)[i];
+          (arpHd->arp_sha)[i] = (iface->addr)[i];
+
+          //std::cout << macAddr[i];
+        }
+        arpHd->arp_op =  htons(0x0002);
+        handlePacket(packet, inIface, nat_flag);//?
+        print_hdr_arp(buf);
+        
+
+      }
+      else if (0x0002 == ntohs(arpHd->arp_op))
+      {
+        fprintf(stdout, "\nshe replied to my dm\n");
+        std::vector<unsigned char> macBuffer;
+        for (int i =0; i<6; i++)
+        {
+          macBuffer.push_back((arpHd->arp_sha)[i]);
+        }
+
+        const std::vector<unsigned char> conBuffer(macBuffer); 
+//do lookup first i think???
+        std::shared_ptr<simple_router::ArpRequest> requests = m_arp.insertArpEntry(conBuffer, arpHd->arp_sip);
+        if(requests!=nullptr)
+        {
+          fprintf(stdout, "\nGot some requests to do\n");
+          std::list<simple_router::PendingPacket> packetList = requests->packets;
+          std::list<simple_router::PendingPacket>::iterator it;
+          for(it = packetList.begin(); it != packetList.end(); ++it)
+          {
+            std::cout << "in the list";
+            //const Interface* outIface = findIfaceByName(it->iface);
+            handlePacket(it->packet, it->iface, nat_flag);
+          }          
+        }
+        //m_arp.removeRequest();
+
+      }
+    
+    }
+    else
+    {
+      std::cout<<"\n got an IP packet \n";
+
+
+      const uint8_t* buf = packet.data();
+      buf+=sizeof(hd);
+      print_hdr_ip(buf); 
+      ip_hdr* ipHd = (ip_hdr*)buf;
+      uint16_t oldsum = ipHd->ip_sum;
+      ipHd->ip_sum=0;
+      uint16_t newsum = cksum(&ipHd, sizeof(ipHd));
+      if (oldsum==newsum)
+      {
+        if(iface->ip == ipHd->ip_dst)
+        {
+          cout<<"\ndestined to router \n";
+        }
+        else
+        {
+          cout << "\nforward packet\n";
+          //translate if NAT
+          ipHd->ip_ttl=ipHd->ttl-1;
+          uint16_t oldsum2 = ipHd->ip_sum;
+          ipHd->ip_sum=0;
+          uint16_t ipHd->ip
+        }
+      }
+
+    }
+
+  }   
 }
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
