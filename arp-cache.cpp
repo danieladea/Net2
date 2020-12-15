@@ -32,7 +32,6 @@ ArpCache::periodicCheckArpRequestsAndCacheEntries()
 {
 
   // FILL THIS IN
-  // record request after 5 tries.
   std::vector<std::list<std::shared_ptr<ArpRequest>>::iterator> invalidRequests;
   for (auto it = m_arpRequests.begin(); it != m_arpRequests.end(); ++it) 
   {
@@ -52,21 +51,17 @@ ArpCache::periodicCheckArpRequestsAndCacheEntries()
       }
       else 
       {
-        //send arp request
         Buffer manualPacket(sizeof(arp_hdr) + sizeof (ethernet_hdr));
 
         struct RoutingTableEntry routeEntry = m_router.getRoutingTable().lookup((*it)->ip);
         const Interface *tableInterface = m_router.findIfaceByName(routeEntry.ifName);
         struct ethernet_hdr ethHd;
-        /*for(int i = 0; i<ETHER_ADDR_LEN; i++)
-        {
-          ethHd.ether_dhost[i]=0xFF;
-        }*/
+
         memcpy(ethHd.ether_dhost,BroadcastEtherAddr,ETHER_ADDR_LEN);
         memcpy(&(ethHd.ether_shost), tableInterface->addr.data(),ETHER_ADDR_LEN);
         ethHd.ether_type = htons(ethertype_arp);
 
-        //do arp now
+
         struct arp_hdr arpHd;
         arpHd.arp_hrd = htons(arp_hrd_ethernet);
         arpHd.arp_pro = htons(ethertype_ip);

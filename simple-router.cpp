@@ -112,7 +112,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
       }
       else if (0x0002 == ntohs(arpHd->arp_op))
       {
-        fprintf(stdout, "\n it was an arp reply\n");
+       // fprintf(stdout, "\n it was an arp reply\n");
         std::vector<unsigned char> macBuffer;
         for (int i =0; i<6; i++)
         {
@@ -125,7 +125,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
         std::shared_ptr<simple_router::ArpRequest> requests = m_arp.insertArpEntry(conBuffer, arpHd->arp_sip);
         if(requests!=nullptr)
         {
-          fprintf(stdout, "\nGot some requests to do\n");
+          //fprintf(stdout, "\nGot some requests to do\n");
           std::list<simple_router::PendingPacket> packetList = requests->packets;
           std::list<simple_router::PendingPacket>::iterator it;
           for(it = packetList.begin(); it != packetList.end(); ++it)

@@ -1,34 +1,28 @@
+Daniel Adea 204999515
 
-====================================
+Design:
 
-For more detailed information about the project and starter code, refer to the project description on CCLE.
+    The spec was a little confusing so I leaned on the TA slides as a reference.
+    We first check if we got a valid message of course. If it is an arp, we
+    check whether it is an arp reply or an arp response. If it s an arp reply,
+    we get the arp requests associated with it and send all the packets for
+    those because we finally got the information needed to send them. If it's an
+    arp request, we switch the sender ip address and receiver ip address as well
+    as changing the type to an arp reply and send the message back.
 
-(For build dependencies, please refer to [`Vagrantfile`](Vagrantfile).)
+    On the other hand, we might get an IP packet. If we do, we have to check the
+    checksum first. Then, if the ip address is the router ip address, we check
+    if it is a valid icmp message. If it is, then we have to figure out if our
+        destination is in the arp cache. If it isn't, we queue it but if it is,
+        we send it!
+        If the ip address is not the router's we do ip forwarding.
 
-## Makefile
+Problems:
 
-The provided `Makefile` provides several targets, including to build `router` implementation.  The starter code includes only the framework to receive raw Ethernet frames and to send Ethernet frames to the desired interfaces.  Your job is to implement the routers logic.
-
-Additionally, the `Makefile` a `clean` target, and `tarball` target to create the submission file as well.
-
-You will need to modify the `Makefile` to add your userid for the `.tar.gz` turn-in at the top of the file.
-
-## Academic Integrity Note
-
-You must host your code in private repositories on [GitHub](https://github.com/), [GitLab](https://gitlab.com), or other places.  At the same time, you are PROHIBITED to make your code for the class project public during the class or any time after the class.  If you do so, you will be violating academic honestly policy that you have signed, as well as the student code of conduct and be subject to serious sanctions.
-
-## Known Limitations
-
-When POX controller is restrated, the simpler router needs to be manually stopped and started again.
-
-## Acknowledgement
-
-This implementation is based on the original code for Stanford CS144 lab3 (https://bitbucket.org/cs144-1617/lab3).
-
-## TODO
-
-    ###########################################################
-    ##                                                       ##
-    ## REPLACE CONTENT OF THIS FILE WITH YOUR PROJECT REPORT ##
-    ##                                                       ##
-    ###########################################################
+    I had a hard time follow what needed to be executed based on the spec. A
+    cohesive walkthrough would've helped and the TA discussion did that a little
+    bit. I was confused about getting the structs right for the headers, but Piazza helped. 
+    I also kept messing up the checksum, but just brute forced that by putting
+    it in different places until it worked. The hardest part was keeping track
+    of when I had the right address and when I had to reassign them. I had to
+    refer to piazza and the discusssions a lot for this.
