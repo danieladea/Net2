@@ -1,508 +1,17 @@
--- 12/15/20 04:54:19.769 ./router: Network: trying to establish tcp connection to 127.0.0.1:8888
--- 12/15/20 04:54:19.772 ./router: Network: tcp connection established
-   local address = 127.0.0.1:37752
+-- 12/15/20 05:18:01.410 ./router: Network: trying to establish tcp connection to 127.0.0.1:8888
+-- 12/15/20 05:18:01.413 ./router: Network: tcp connection established
+   local address = 127.0.0.1:37756
    remote address = 127.0.0.1:8888
 Resetting SimpleRouter with 3 ports
 sw0-eth1 (192.168.2.1, 9a:1b:e4:47:ef:72)
 sw0-eth2 (172.64.3.1, 66:1e:e5:bd:99:31)
 sw0-eth3 (172.32.10.1, a6:a0:d5:26:e7:ad)
--- 12/15/20 04:54:19.777 ./router: Network: attempting to bind to tcp socket :::65500
--- 12/15/20 04:54:19.777 ./router: Network: listening for tcp connections at :::65500
+-- 12/15/20 05:18:01.429 ./router: Network: attempting to bind to tcp socket :::65500
+-- 12/15/20 05:18:01.429 ./router: Network: listening for tcp connections at :::65500
    local interfaces: 10.0.2.15, 172.32.10.10, 127.0.0.1, 0:0:0:0:0:0:0:1
--- 12/15/20 04:54:19.778 ./router: Network: published endpoints for object adapter `Tester':
+-- 12/15/20 05:18:01.429 ./router: Network: published endpoints for object adapter `Tester':
    tcp -h 10.0.2.15 -p 65500:tcp -h 172.32.10.10 -p 65500
--- 12/15/20 04:54:19.778 ./router: Network: accepting tcp connections at :::65500
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 4547
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 31427
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 4749
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 45250
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0sent manual packet
-		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 4974
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 53185
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 5167
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 3777
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 5335
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 26304
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 5340
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 25024
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 5533
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 41151
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 5632
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 15807
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 5795
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 39614
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 5901
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 12478
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 6027
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 45757
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 6153
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 13501
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 6312
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 38332
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-Got packet of size 98 on interface sw0-eth3
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-IP header:
-	version: 4
-	header length: 5
-	type of service: 0
-	length: 84
-	id: 6332
-	fragment flag: DF
-	fragment offset: 0
-	TTL: 64
-	protocol: 1
-	checksum: 33212
-	source: 172.32.10.10
-	destination: 172.64.3.1
-2048did something
- got an IP packet 
-
-ip address is not mine, do ip forwarding 
-ttl is valid
-passed ip checksum
-found ip on interface so just sent packet
-Got packet of size 98 on interface sw0-eth2
-Destination	Gateway		Mask	Iface
-0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
-192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
-172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
-
-2048do nothing 
-arp entry not found, forwarding packet
-sent manual packet
-sent manual packet
+-- 12/15/20 05:18:01.429 ./router: Network: accepting tcp connections at :::65500
 Got packet of size 42 on interface sw0-eth3
 Destination	Gateway		Mask	Iface
 0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
@@ -510,7 +19,150 @@ Destination	Gateway		Mask	Iface
 172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
 
 2054did something	hardware type: 1
-sent manual packet
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 50423
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 26121
+	source: 172.32.10.10
+	destination: 172.32.10.1
+2048did something
+ got an IP packet 
+
+destined to router 
+icmp checksum failed
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 50537
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 62472
+	source: 172.32.10.10
+	destination: 172.32.10.1
+2048did something
+ got an IP packet 
+
+destined to router 
+icmp checksum failed
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 50567
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 54792
+	source: 172.32.10.10
+	destination: 172.32.10.1
+2048did something
+ got an IP packet 
+
+destined to router 
+icmp checksum failed
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 50745
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 9224
+	source: 172.32.10.10
+	destination: 172.32.10.1
+2048did something
+ got an IP packet 
+
+destined to router 
+icmp checksum failed
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 50787
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 64007
+	source: 172.32.10.10
+	destination: 172.32.10.1
+2048did something
+ got an IP packet 
+
+destined to router 
+icmp checksum failed
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 50797
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 61447
+	source: 172.32.10.10
+	destination: 172.32.10.1
+2048did something
+ got an IP packet 
+
+destined to router 
+icmp checksum failed
 Got packet of size 42 on interface sw0-eth3
 Destination	Gateway		Mask	Iface
 0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
@@ -518,10 +170,84 @@ Destination	Gateway		Mask	Iface
 172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
 
 2054did something	hardware type: 1
-sent manual packet
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 50992
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 11527
+	source: 172.32.10.10
+	destination: 172.32.10.1
+2048did something
+ got an IP packet 
+
+destined to router 
+icmp checksum failed
 Got packet of size 42 on interface sw0-eth3
 Destination	Gateway		Mask	Iface
 0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
 192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
 172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
 
+2054did something	hardware type: 1
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 51122
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 43782
+	source: 172.32.10.10
+	destination: 172.32.10.1
+2048did something
+ got an IP packet 
+
+destined to router 
+icmp checksum failed
+Got packet of size 42 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+2054did something	hardware type: 1
+Got packet of size 98 on interface sw0-eth3
+Destination	Gateway		Mask	Iface
+0.0.0.0		172.32.10.10	0.0.0.0	sw0-eth3
+192.168.2.2		192.168.2.2	255.255.255.0	sw0-eth1
+172.64.3.10		172.64.3.10	255.255.0.0	sw0-eth2
+
+IP header:
+	version: 4
+	header length: 5
+	type of service: 0
+	length: 84
+	id: 51358
+	fragment flag: DF
+	fragment offset: 0
+	TTL: 64
+	protocol: 1
+	checksum: 48901
+	source: 172.32.10.10
+	destination: 172.32.10.1

@@ -14,6 +14,7 @@ namespace simple_router {
 void
 NatTable::checkNatTable()
 {
+
 }
 
 std::shared_ptr<NatEntry>
@@ -26,6 +27,7 @@ NatTable::lookup(uint16_t id)
 void
 NatTable::insertNatEntry(uint16_t id, uint32_t in_ip, uint32_t ex_ip)
 {
+  
 }
 
 //////////////////////////////////////////////////////////////////////////
