@@ -41,7 +41,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
    
   // FILL THIS IN
   ethernet_hdr hd;
-  std::cout<<"new packet\n";
+  //std::cout<<"new packet\n";
   const uint8_t* buf = packet.data();
   print_hdr_eth(buf);
   //ethernet_hdr* hd= (ethernet_hdr*) packet;
@@ -67,14 +67,18 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
   }
 
 
-  std::cout << hd.ether_type;
+  //std::cout << hd.ether_type;
   if (hd.ether_type != 0x0806 && hd.ether_type != 0x0800)
-      std::cout << "do nothing?\n";
+  {
+      //std::cout << "do nothing?\n";
+  }
   else if (broadcastFlag==1 && MACflag ==1 )
-      std::cout << "do nothing \n";
+  {
+      //std::cout << "do nothing \n";
+  }
   else
   {
-    std::cout << "did something";
+    //std::cout << "did something";
     //const Interface* destIface = findIfaceByMac(hd.ether_dhost);
     sendPacket(packet, inIface);     
     
@@ -126,7 +130,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
           std::list<simple_router::PendingPacket>::iterator it;
           for(it = packetList.begin(); it != packetList.end(); ++it)
           {
-            std::cout << "in the list";
+            //std::cout << "in the list";
             //const Interface* outIface = findIfaceByName(it->iface);
             ethernet_hdr* urmum = (ethernet_hdr*) it->packet.data();
             auto iface = findIfaceByName(it->iface);  
@@ -146,7 +150,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
     }
     else
     {
-      std::cout<<"\n got an IP packet \n";
+      //std::cout<<"\n got an IP packet \n";
 
       //check if ip address is you
       // if it is you, check if icmp 
@@ -160,11 +164,11 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
       uint16_t newsum = cksum(buf, sizeof(ip_hdr));
       if (oldsum==newsum)
       {
-        std::cout <<"\n ip checksum passed\n";
+        //std::cout <<"\n ip checksum passed\n";
         ipHd->ip_sum = newsum;
         if(iface->ip == ipHd->ip_dst) //if ip is your ip
         {
-          std::cout<<"\ndestined to router \n";
+          //std::cout<<"\ndestined to router \n";
 
           if(ipHd->ip_p == ip_protocol_icmp)          //if icmp packet-> hndle ping
           {
@@ -184,7 +188,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
               if(oldICMPsum != icmpCheck)
               {
                 //checksum failed
-                std::cout << "icmp checksum failed\n";
+                //std::cout << "icmp checksum failed\n";
                 return;
               }
               else 
@@ -201,12 +205,12 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
                 
                 if(!true)
                 {
-                  std::cout<<"wtf\n";
+                  //std::cout<<"wtf\n";
                 }
                 if(m_arp.lookup(ipHd->ip_src)==nullptr) //if mac address note in arpcache
                 {
                   //queue packet
-                  std::cout<<"why is this stopping tcp socket from dropping\n";
+                  //std::cout<<"why is this stopping tcp socket from dropping\n";
                   Buffer senderMac = std::vector<unsigned char>(6, 0);
                   memcpy(&senderMac[0], &packet[6], 6);
                   m_arp.insertArpEntry(senderMac ,ipHd->ip_src);
@@ -214,7 +218,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
                 //otherwise, we have the new mac address
                 else
                 {
-                  std::cout << "using next hop to forward and icmp passed\n";
+                  //std::cout << "using next hop to forward and icmp passed\n";
 
                   ip_hdr* urdad = (ip_hdr*) (packet.data()+sizeof(ethernet_hdr));
                   auto tempAddr = urdad->ip_dst;
@@ -225,7 +229,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
                   destMac = m_arp.lookup(match.gw);
                   if(destMac==nullptr)
                   {
-                    std::cout<<"queueing request\n";
+                    //std::cout<<"queueing request\n";
                     const uint8_t* buf = packet.data();
                     print_hdrs(buf, sizeof(ethernet_hdr)+sizeof(ip_hdr)+sizeof(icmp_hdr));
                     m_arp.queueRequest(ipHd->ip_dst, packet, match.ifName);
@@ -260,7 +264,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
 
                     print_hdr_icmp(buf);
                     buf+=sizeof(hd);
-                    std::cout<<"about to send packet after icmp update\n";
+                    //std::cout<<"about to send packet after icmp update\n";
                     sendPacket(packet, ifaceForward->name); 
                   }
 
@@ -277,34 +281,34 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
         }
         else //if ip address belongs to someone else, do ip forwarding
         {
-          std::cout << "\nip address is not mine, do ip forwarding \n";
+          //std::cout << "\nip address is not mine, do ip forwarding \n";
           //translate if NAT
           ipHd->ip_ttl=(ipHd->ip_ttl)-1;
 
           if(ipHd->ip_ttl==0)
           {
             //ttl is 0
-            std::cout << "ttl is 0\n";
+            //std::cout << "ttl is 0\n";
             return;
           }
           else //valid ttl
           {
-            std::cout << "ttl is valid\n";
+            //std::cout << "ttl is valid\n";
             //uint16_t oldsum2 = ipHd->ip_sum;
             ipHd->ip_sum = 0;
             ipHd->ip_sum = cksum(buf, sizeof(ip_hdr)); 
 
-            std::cout << "passed ip checksum\n";
+            //std::cout << "passed ip checksum\n";
             if(findIfaceByIp(ipHd->ip_dst) != nullptr)
             {
-              std::cout << "found ip on interface so just sent packet\n";
+              //std::cout << "found ip on interface so just sent packet\n";
               const Interface* sendingIface = findIfaceByIp(ipHd->ip_dst);
               ethernet_hdr* urmum = (ethernet_hdr*) packet.data();
               for(int i=0; i<6;i++)
               {
                 urmum->ether_dhost[i]=sendingIface->addr[i];
               }
-              std::cout<<"sendingpacket2\n";
+              //std::cout<<"sendingpacket2\n";
               handlePacket(packet, sendingIface->name,nat_flag);
               
             }
@@ -319,7 +323,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
 
               if(m_arp.lookup(ipHd->ip_dst)==nullptr) //if mac address not found do the queue
               {
-                std::cout << "arp entry not found, forwarding packet\n";
+                //std::cout << "arp entry not found, forwarding packet\n";
                 //arp entry not found, forward the packet
                 //std::vector<unsigned char> temp = std::vector<unsigned char>(6,0);
                 //std::memcpy(&temp[0],&hd.ether_dhost,sizeof(hd.ether_dhost));
@@ -331,7 +335,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
               }
               else //make the mac address the destination mac address and handle packet with next hop stuff
               {
-                std::cout << "using next hop to forward\n";
+                //std::cout << "using next hop to forward\n";
 
                 std::shared_ptr<simple_router::ArpEntry> destMac;
                 destMac = m_arp.lookup(match.gw);
@@ -349,7 +353,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
                 print_hdr_eth(buf);
                 buf+=sizeof(hd);
                 print_hdr_ip(buf);
-                std::cout<<"sending1\n";
+                //std::cout<<"sending1\n";
                 sendPacket(packet, ifaceForward->name);
               }
             }
@@ -358,7 +362,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
       }
       else
       {
-        std::cout << "failed checksum";
+        //std::cout << "failed checksum";
       }
     }
 
