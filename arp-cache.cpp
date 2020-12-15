@@ -32,6 +32,79 @@ ArpCache::periodicCheckArpRequestsAndCacheEntries()
 {
 
   // FILL THIS IN
+  // record request after 5 tries.
+  std::vector<std::list<std::shared_ptr<ArpRequest>>::iterator> invalidRequests;
+  for (auto it = m_arpRequests.begin(); it != m_arpRequests.end(); ++it) 
+  {
+    if (*it == nullptr) 
+    {
+      return;
+    }
+
+    auto currTime = steady_clock::now();
+    if (std::chrono::duration_cast<seconds>(currTime - (*it)->timeSent) >= seconds(1)) 
+    {
+      if ((*it)->nTimesSent >= 5) 
+      {
+        std::list<PendingPacket>::iterator packetIterator;
+        m_arpRequests.remove(*it);
+        return;
+      }
+      else 
+      {
+        //send arp request
+        Buffer manualPacket(sizeof(arp_hdr) + sizeof (ethernet_hdr));
+
+        struct RoutingTableEntry routeEntry = m_router.getRoutingTable().lookup((*it)->ip);
+        const Interface *tableInterface = m_router.findIfaceByName(routeEntry.ifName);
+        struct ethernet_hdr ethHd;
+        /*for(int i = 0; i<ETHER_ADDR_LEN; i++)
+        {
+          ethHd.ether_dhost[i]=0xFF;
+        }*/
+        memcpy(ethHd.ether_dhost,BroadcastEtherAddr,ETHER_ADDR_LEN);
+        memcpy(&(ethHd.ether_shost), tableInterface->addr.data(),ETHER_ADDR_LEN);
+        ethHd.ether_type = htons(ethertype_arp);
+
+        //do arp now
+        struct arp_hdr arpHd;
+        arpHd.arp_hrd = htons(arp_hrd_ethernet);
+        arpHd.arp_pro = htons(ethertype_ip);
+        arpHd.arp_hln = ETHER_ADDR_LEN;
+        arpHd.arp_pln = 4;
+        arpHd.arp_op = htons(arp_op_request);
+
+        memcpy(arpHd.arp_sha, tableInterface->addr.data(), ETHER_ADDR_LEN);
+        arpHd.arp_sip = tableInterface->ip;
+        const uint8_t* targHardware[ETHER_ADDR_LEN] = {0x00,0x00,0x00,0x00,0x00,0x00}; //can we do this instead of for loop?
+        memcpy(arpHd.arp_tha, targHardware, ETHER_ADDR_LEN);
+        arpHd.arp_tip = (*it)->ip;
+
+
+        memcpy(&manualPacket[0], &ethHd, sizeof(ethernet_hdr));
+        memcpy(&manualPacket[sizeof(ethHd)], &arpHd, sizeof(arp_hdr));
+        //print_hdrs(manualPacket);
+        m_router.sendPacket(manualPacket, tableInterface->name);
+        std::cout<< "sent manual packet\n";
+      }
+    }
+
+  }
+
+  //remove
+  std::list<std::shared_ptr<ArpEntry>>::iterator arpIter=m_cacheEntries.begin();
+  while(arpIter!=m_cacheEntries.end())
+  {
+    if(!(*arpIter)->isValid)
+    {
+      arpIter=m_cacheEntries.erase(arpIter);
+    }
+    else 
+    {
+      arpIter++;
+    }
+  }
+
 
 }
 //////////////////////////////////////////////////////////////////////////

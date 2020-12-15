@@ -14,8 +14,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-//server mac address 32:86:A1:1E:6B:3D
-
 #include "simple-router.hpp"
 #include "core/utils.hpp"
 #include <iostream>
@@ -40,8 +38,7 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
   std::cerr << getRoutingTable() << std::endl;
    
   // FILL THIS IN
-  ethernet_hdr hd;
-  //ethernet_hdr* hd= (ethernet_hdr*) packet;
+  ethernet_hdr hd; 
   for (int i=0; i<6;i++)
   {
       hd.ether_dhost[i] = packet[i];
@@ -75,15 +72,15 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
     //const Interface* destIface = findIfaceByMac(hd.ether_dhost);
     sendPacket(packet, inIface);     
     
-    if(hd.ether_type == 0x0806) //if arp
+    if(hd.ether_type == 0x0806)
     {
       const uint8_t* buf = packet.data();
       buf+=sizeof(hd);
-      //print_hdr_arp(buf); 
+      print_hdr_arp(buf); 
       arp_hdr* arpHd = (arp_hdr*)buf;
       fprintf(stdout, "\thardware type: %d\n", ntohs(arpHd->arp_hrd));
       //check arp-cache
-      if (0x0001 == ntohs(arpHd->arp_op)) //if arp request
+      if (0x0001 == ntohs(arpHd->arp_op))
       {
         //arp request
         //unsigned char macAddr[6]; 
@@ -95,17 +92,15 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
 
           //std::cout << macAddr[i];
         }
-        uint16_t tmp = arpHd->arp_sip;
-        arpHd->arp_sip = arpHd->arp_tip;
-        arpHd->arp_tip = tmp;
-        arpHd->arp_op =  htons(0x0002); //setting type to arp reply
-        sendPacket(packet, inIface);//?
-        //print_hdr_arp(buf);
+        arpHd->arp_op =  htons(0x0002);
+        handlePacket(packet, inIface, nat_flag);//?
+        print_hdr_arp(buf);
         
+
       }
       else if (0x0002 == ntohs(arpHd->arp_op))
       {
-        fprintf(stdout, "\n it was an arp reply\n");
+        fprintf(stdout, "\nshe replied to my dm\n");
         std::vector<unsigned char> macBuffer;
         for (int i =0; i<6; i++)
         {
@@ -125,19 +120,11 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
           {
             std::cout << "in the list";
             //const Interface* outIface = findIfaceByName(it->iface);
-            ethernet_hdr* urmum = (ethernet_hdr*) it->packet.data();
-            auto iface = findIfaceByName(it->iface);  
-            for(int i=0; i<6; i++)
-            {
-              urmum->ether_dhost[i] = iface->addr[i];
-            }
             handlePacket(it->packet, it->iface, nat_flag);
-            const uint8_t* buf = packet.data();
-            buf+=sizeof(hd);
-            print_hdr_arp(buf); 
-          }    
-          m_arp.removeRequest(requests);      
+          }          
         }
+        m_arp.removeRequest();
+
       }
     
     }
@@ -150,19 +137,19 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
 
       const uint8_t* buf = packet.data();
       buf+=sizeof(hd);
-      print_hdr_ip(buf);
+      print_hdr_ip(buf); 
       ip_hdr* ipHd = (ip_hdr*)buf;
       uint16_t oldsum = ipHd->ip_sum;
       ipHd->ip_sum=0;
-      uint16_t newsum = cksum(buf, sizeof(ip_hdr));
+      uint16_t newsum = cksum(&ipHd, sizeof(ipHd));
       if (oldsum==newsum)
       {
-        ipHd->ip_sum = newsum;
+        ipHd->ip_sum = newsum
         if(iface->ip == ipHd->ip_dst) //if ip is your ip
         {
           std::cout<<"\ndestined to router \n";
 
-          if(ipHd->ip_p == ip_protocol_icmp)          //if icmp packet-> hndle ping
+          if(ipHd->ip_p = ip_protocol_icmp)          //if icmp packet-> hndle ping
           {
             //struct icmp_hdr icmpPacket;
             const uint8_t* icmpBuf = packet.data();
@@ -181,7 +168,6 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
               if(oldICMPsum != icmpCheck)
               {
                 //checksum failed
-                std::cout << "icmp checksum failed\n";
                 return;
               }
               else //if ip address if you
@@ -191,25 +177,12 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
                 //send echo reply; 
                 //look up mac address in arpcache; 
                 //     if nullptr queue packet for later using enqueue
-                //      if not nullptr, then you have the new mac address. sender mac address is ur mac address from interface var 
-                //          .use that as the dest and change from echo type to echro reply type and then handle packet
+                //      if not nullptr, then you have the new mac address. sender mac address is ur mac address from interface var .use that as the dest and change from echo type to echro reply type and then handle packet
 
-                //if targetIP's interface= inIface then make echo reply
+                //if targetIP's interface= inIface then make echo reply\
                 
                 
-                if(m_arp.lookup(ipHd->ip_src)==nullptr) //if mac address note in arpcache
-                {
-                  //queue packet
-                  Buffer senderMac = std::vector<unsigned char>(6, 0);
-                  memcpy(&senderMac[0], &packet[6], 6);
-                  m_arp.insertArpEntry(senderMac ,ipHd->ip_src);
-                }
-                //otherwise, we have the new mac address
-                //somehow change the mac address
-                icmpPacket->icmp_type=0;
-
-                //recompute checksum. the ip or icmp?
-
+                //recompute checksum
               }
 
             }
@@ -218,79 +191,46 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface, int
         }
         else //if ip address belongs to someone else, do ip forwarding
         {
-          std::cout << "\nip address is not mine, do ip forwarding \n";
+          std::cout << "\nforward packet\n";
           //translate if NAT
           ipHd->ip_ttl=(ipHd->ip_ttl)-1;
 
           if(ipHd->ip_ttl==0)
           {
             //ttl is 0
-            std::cout << "ttl is 0\n";
             return;
           }
           else //valid ttl
           {
-            std::cout << "ttl is valid\n";
-            //uint16_t oldsum2 = ipHd->ip_sum;
+            uint16_t oldsum2 = ipHd->ip_sum;
             ipHd->ip_sum = 0;
-            ipHd->ip_sum = cksum(buf, sizeof(ip_hdr)); 
-
-            std::cout << "passed ip checksum\n";
-            if(findIfaceByIp(ipHd->ip_dst) != nullptr)
-            {
-              std::cout << "found ip on interface so just sent packet\n";
-              const Interface* sendingIface = findIfaceByIp(ipHd->ip_dst);
-              handlePacket(packet, sendingIface->name,nat_flag);
-              //change mac address?
-            }
+            //uint16_t ipHd->ip;
             //lookup routing table and find next hop
-
             RoutingTableEntry match = m_routingTable.lookup(ipHd->ip_dst);
 
-            //look up arp cache 
-            //const uint8_t* buf2 = packet.data();
-            //print_hdr_arp(buf2);
 
-            if(m_arp.lookup(ipHd->ip_dst)==nullptr) //if mac address not found do the queue
+            //look up arp cache 
+            if(m_arp.lookup(ipHd->ip_src)==nullptr)
             {
-              std::cout << "arp entry not found, forwarding packet\n";
               //arp entry not found, forward the packet
-              //std::vector<unsigned char> temp = std::vector<unsigned char>(6,0);
-              //std::memcpy(&temp[0],&hd.ether_dhost,sizeof(hd.ether_dhost));
-              ///const std::vector<unsigned char> msgEthAddr = temp;
-              //const Interface *msgInter = findIfaceByMac(msgEthAddr);
+              std::vector<unsigned char> temp = std::vector<unsigned char>(6,0);
+              std::memcpy(&temp[0],&hd.ether_dhost,sizeof(hd.ether_dhost));
+              const std::vector<unsigned char> msgEthAddr = temp;
+              const Interface *msgInter = findIfaceByMac(msgEthAddr);
               //
-              m_arp.queueRequest(ipHd->ip_dst, packet, match.ifName);
+              m_arp.queueRequest(ipHd->ip_dst, packet, msgInter->name );
               //send arp req
             }
-            else //make the mac address the destination mac address and handle packet with next hop stuff
+            else 
             {
-              std::cout << "using next hop to forward\n";
+              //forward packet
 
-              std::shared_ptr<simple_router::ArpEntry> destMac;
-              destMac = m_arp.lookup(match.gw);
-              const Interface *ifaceForward = findIfaceByName(match.ifName);
-              ethernet_hdr* urmum = (ethernet_hdr*) packet.data();
-              
-              memcpy(urmum->ether_shost, &ifaceForward->addr[0] ,sizeof(hd.ether_shost));
-              //memcpy(hd.ether_dhost, (destMac->mac).data(), sizeof(hd.ether_dhost));
-              for(int i=0; i<6; i++)
-              {
-                urmum->ether_dhost[i] = (destMac->mac)[i];
-              }
-              const uint8_t* buf = packet.data();
-              print_hdr_eth(buf);
-              buf+=sizeof(hd);
-              print_hdr_ip(buf);
-              sendPacket(packet, ifaceForward->name);
             }
           }
+
         }
       }
-      else
-      {
-        std::cout << "failed checksum";
-      }
+
     }
 
   }   
